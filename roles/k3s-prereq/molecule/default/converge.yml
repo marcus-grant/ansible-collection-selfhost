@@ -1,0 +1,8 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+  tasks:
+    - name: "Include k3s-prereq"
+      include_role:
+        name: "k3s-prereq"

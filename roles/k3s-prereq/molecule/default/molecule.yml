@@ -1,0 +1,100 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: vagrant
+  provider:
+    name: libvirt
+platforms:
+  - name: instance
+    box: ${TESTBOX:-debian/bullseye64}
+    provider_options:
+      # using session with network leads to troubles
+      qemu_use_session: false
+    interfaces:
+      - network_name: private_network
+        ip: 192.168.56.4
+        auto_config: true
+      - network_name: forwarded_port
+        guest: 6443
+        host: 6443
+      - network_name: forwarded_port
+        guest: 10250
+        host: 10250
+      - network_name: forwarded_port
+        guest: 10251
+        host: 10251
+      - network_name: forwarded_port
+        guest: 10252
+        host: 10252
+      - network_name: forwarded_port
+        guest: 8285
+        host: 8285
+provisioner:
+  name: ansible
+verifier:
+  name: ansible
+# dependency:
+#   name: galaxy
+# driver:
+#   name: vagrant
+#   provider:
+#     name: libvirt
+#   provision: no
+#   cachier: machine
+#   parallel: true
+# platforms:
+#   - name: instance
+#     # list of dictionaries mapped to config.vm.network
+#     interfaces:
+#       # network_name is the only required identifier, other keys map to args
+#       - auto_config: true
+#         network_name: private_network
+#           # type: dhcp works too
+#         ip: 192.168.127.1
+#       - network_name: forwarded_port
+#         guest: 6443
+#         host: 6443
+#       - network_name: forwarded_port
+#         guest: 10250
+#         host: 10250
+#       - network_name: forwarded_port
+#         guest: 10251
+#         host: 10251
+#       - network_name: forwarded_port
+#         guest: 10252
+#         host: 10252
+#       - network_name: forwarded_port
+#         guest: 8285
+#         host: 8285
+#     # List of raw Vagrant `config` options
+#     # instance_raw_config_args:
+#     #   # use single quotes to avoid YAML parsing as dict due to ':'
+#     #   - 'vm.synced_folder ".", "/vagrant", type: "rsync"'
+#     #   # Run 'uname' a provisionning step **needs 'provision: true' to work**
+#     #   - 'vm.provision :shell, inline: "uname"'
+#     # Dictionary of `config` options. Note that string values need to be
+#     # explicitly enclosed in quotes.
+#     config_options:
+#       ssh.keep_alive: yes
+#       ssh.remote_user: 'vagrant'
+#       synced_folder: true
+#     box: debian/bullseye64
+#     # box_version: 32.20200422.0
+#     # box_url:
+#     # memory: 2048
+#     # cpus: 1
+#     # Dictionary of options passed to the provider
+#     # provider_options:
+#     #   video_type: 'vga'
+#     # List of raw provider options
+#     # provider_raw_config_args:
+#     #   - cpuset = '1-4,^3,6'
+# provisioner:
+#   name: ansible
+# verifier:
+#   name: ansible
+# lint: |
+#   set -e
+#   yamllint .
+#   ansible-lint
